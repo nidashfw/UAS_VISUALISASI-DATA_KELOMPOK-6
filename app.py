@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 import folium
+import os
 from streamlit_folium import st_folium
 
 # =========================
@@ -125,6 +126,67 @@ def load_data():
 
 df = load_data()
 
+image_map = {
+    "KABUPATEN BOGOR": "images/kab_bogor.jpg",
+    "KABUPATEN SUKABUMI": "images/kab_sukabumi.jpg",
+    "KABUPATEN CIANJUR": "images/kab_cianjur.jpg",
+    "KABUPATEN BANDUNG": "images/kab_bandung.jpg",
+    "KABUPATEN GARUT": "images/kab_garut.jpg",
+    "KABUPATEN TASIKMALAYA": "images/kab_tasikmalaya.jpg",
+    "KABUPATEN CIAMIS": "images/kab_ciamis.jpg",
+    "KABUPATEN KUNINGAN": "images/kab_kuningan.jpg",
+    "KABUPATEN CIREBON": "images/kab_cirebon.jpg",
+    "KABUPATEN MAJALENGKA": "images/kab_majalengka.jpg",
+    "KABUPATEN SUMEDANG": "images/kab_sumedang.jpg",
+    "KABUPATEN INDRAMAYU": "images/kab_indramayu.jpg",
+    "KABUPATEN SUBANG": "images/kab_subang.jpg",
+    "KABUPATEN PURWAKARTA": "images/kab_purwakarta.jpg",
+    "KABUPATEN KARAWANG": "images/kab_karawang.jpg",
+    "KABUPATEN BEKASI": "images/kab_bekasi.jpg",
+    "KABUPATEN BANDUNG BARAT": "images/kab_bandung_barat.jpg",
+    "KABUPATEN PANGANDARAN": "images/kab_pangandaran.jpg",
+    "KOTA BOGOR": "images/kota_bogor.jpg",
+    "KOTA SUKABUMI": "images/kota_sukabumi.jpg",
+    "KOTA BANDUNG": "images/kota_bandung.jpg",
+    "KOTA CIREBON": "images/kota_cirebon.jpg",
+    "KOTA BEKASI": "images/kota_bekasi.jpg",
+    "KOTA DEPOK": "images/kota_depok.jpg",
+    "KOTA CIMAHI": "images/kota_cimahi.jpg",
+    "KOTA TASIKMALAYA": "images/kota_tasikmalaya.jpg",
+    "KOTA BANJAR": "images/kota_banjar.jpg",
+}
+
+place_map = {
+    "KABUPATEN BOGOR": "Situs Cibalay (Kabupaten Bogor)",
+    "KABUPATEN SUKABUMI": "Kampung Adat Ciptagelar (Kabupaten Sukabumi)",
+    "KABUPATEN CIANJUR": "Bumi Ageung Cikidang (Kabupaten Cianjur)",
+    "KABUPATEN BANDUNG": "Candi Bojong Menje (Kabupaten Bandung)",
+    "KABUPATEN GARUT": "Candi Cangkuang (Kabupaten Garut)",
+    "KABUPATEN TASIKMALAYA": "Kampung Naga (Kabupaten Tasikmalaya)",
+    "KABUPATEN CIAMIS": "Situs Ciung Wanara Karangkamulyan (Kabupaten Ciamis)",
+    "KABUPATEN KUNINGAN": "Paseban Tri Panca Tunggal (Kabupaten Kuningan)",
+    "KABUPATEN CIREBON": "Keraton Kasepuhan (Kabupaten Cirebon)",
+    "KABUPATEN MAJALENGKA": "Museum Talaga Manggung (Kabupaten Majalengka)",
+    "KABUPATEN SUMEDANG": "Museum Prabu Geusan Ulun (Kabupaten Sumedang)",
+    "KABUPATEN INDRAMAYU": "Situs Buyut Banjaran (Kabupaten Indramayu)",
+    "KABUPATEN SUBANG": "Situs Cipari Subang (Kabupaten Subang)",
+    "KABUPATEN PURWAKARTA": "Stasiun Purwakarta Lama (Kabupaten Purwakarta)",
+    "KABUPATEN KARAWANG": "Situs Batujaya (Kabupaten Karawang)",
+    "KABUPATEN BEKASI": "Gedung Juang Tambun (Kabupaten Bekasi)",
+    "KABUPATEN BANDUNG BARAT": "Observatorium Bosscha (Kabupaten Bandung Barat)",
+    "KABUPATEN PANGANDARAN": "Situs Batu Kalde (Kabupaten Pangandaran)",
+    "KOTA BOGOR": "Istana Bogor (Kota Bogor)",
+    "KOTA SUKABUMI": "Museum Pegadaian Sukabumi (Kota Sukabumi)",
+    "KOTA BANDUNG": "Gedung Sate (Kota Bandung)",
+    "KOTA CIREBON": "Keraton Kanoman (Kota Cirebon)",
+    "KOTA BEKASI": "Gedung Juang 45 Bekasi (Kota Bekasi)",
+    "KOTA DEPOK": "Rumah Cimanggis (Kota Depok)",
+    "KOTA CIMAHI": "Gedung Sudirman Cimahi (Kota Cimahi)",
+    "KOTA TASIKMALAYA": "Masjid Agung Tasikmalaya (Kota Tasikmalaya)",
+    "KOTA BANJAR": "Situs Situ Leutik Banjar (Kota Banjar)"
+}
+
+
 # =========================
 # SIDEBAR FILTER
 # =========================
@@ -146,6 +208,26 @@ filtered_df = df[
     (df["nama_kabupaten_kota"].isin(selected_kabupaten)) &
     (df["jenis_cagar_budaya"].isin(selected_jenis))
 ]
+
+st.subheader("Cagar Budaya Paling Populer Tiap Kabupaten/Kota")
+
+cols = st.columns(4)
+i = 0
+
+for kab in selected_kabupaten:
+    if kab in image_map:
+        img_path = image_map[kab]
+        place_name = place_map.get(kab, kab)
+
+        if os.path.exists(img_path):
+            with cols[i % 4]:
+                st.image(img_path, width=230)
+                st.markdown(
+                    f"<p style='text-align:center; color:black; font-weight:600;'>{place_name}</p>",
+                    unsafe_allow_html=True
+                )
+            i += 1
+
 
 # =========================
 # GRAFIK
